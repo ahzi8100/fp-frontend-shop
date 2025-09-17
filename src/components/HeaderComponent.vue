@@ -1,4 +1,12 @@
 <script setup>
+import { useAuthStore } from '@/stores/auth';
+import { onMounted } from 'vue';
+
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  await authStore.getUser()
+})
 </script>
 
 <template>
@@ -6,7 +14,7 @@
   <header class="bg-gray-dark sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center py-4">
       <!-- Left section: Logo -->
-      <router-link to="" class="flex items-center">
+      <router-link :to="{ name: 'home' }" class="flex items-center">
         <div>
           <img src="../assets/images/logo.png" alt="Logo" class="h-14 w-auto mr-4">
         </div>
@@ -34,12 +42,12 @@
             <img src="../assets/images/cart-shopping.svg" alt="Cart" class="h-6 w-6 group-hover:scale-120">
           </router-link>
         </div>
-        <div>
-          <router-link to=""
+        <div v-if="authStore.user">
+          <router-link :to="{ name: 'dashboard' }"
             class="border hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Account
           </router-link>
         </div>
-        <div class="space-x-2">
+        <div v-else class="space-x-2">
           <router-link :to="{ name: 'register' }"
             class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
             Register

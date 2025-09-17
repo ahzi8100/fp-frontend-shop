@@ -9,6 +9,20 @@ export const useAuthStore = defineStore('authStore', {
     }
   },
   actions: {
+    async getUser() {
+      if(localStorage.getItem('token')) {
+        try {
+          const res = await Api.get('/user')
+
+          const data = res.data;
+          this.user = data;
+        } catch (error) {
+          this.errors = error.response.data.errors;
+          this.user = null;
+        }
+      }
+    },
+
     async authenticate(apiRoute, formData) {
       try {
         const res = await Api.post(`/${apiRoute}`, formData);
