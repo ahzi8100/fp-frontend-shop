@@ -8,6 +8,8 @@ import OrderView from '@/views/dashboard/OrderView.vue'
 import OrderShow from '@/views/dashboard/OrderShow.vue'
 import IndexCategory from '@/views/category/IndexCategory.vue'
 import ShowCategory from '@/views/category/ShowCategory.vue'
+import IndexProduct from '@/views/product/IndexProduct.vue'
+import ShowProduct from '@/views/product/ShowProduct.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,6 +58,16 @@ const router = createRouter({
       path: '/category/:slug',
       name: 'detail_category',
       component: ShowCategory,
+    },
+    {
+      path: '/products',
+      name: 'products',
+      component: IndexProduct,
+    },
+    {
+      path: '/product/:slug',
+      name: 'detail_product',
+      component: ShowProduct,
     },
   ],
 })
