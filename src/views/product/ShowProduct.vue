@@ -14,7 +14,7 @@ const quantity = ref(1);
 
 const { addToCart } = useCartStore();
 const { user } = storeToRefs(useAuthStore());
-const { router } = useRouter();
+const router = useRouter();
 
 const handleAddToCart = async (product, quantity) => {
   if (!user.value) {
