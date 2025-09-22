@@ -6,6 +6,7 @@ import { useProductStore } from '@/stores/product';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
 const { getDetailProduct } = useProductStore();
 const product = ref({});
@@ -20,7 +21,29 @@ const handleAddToCart = async (product, quantity) => {
   if (!user.value) {
     return router.push({ name: 'login' })
   }
-  await addToCart(product, quantity);
+  const res = await addToCart(product, quantity);
+  if (res) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: 'Success add item to cart',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      customClass: {
+        popup: 'mt-24'
+      }
+    })
+  }
+}
+
+function checkStock() {
+  if (quantity.value > product.value.stock) {
+    quantity.value = product.value.stock;
+  } else if (quantity.value < 1) {
+    quantity.value = 1;
+  }
 }
 
 onMounted(async () => {
@@ -51,17 +74,21 @@ onMounted(async () => {
                 <p class="mb-2">Availability: <strong> {{ product.stock }} In Stock</strong></p>
               </div>
               <div class="text-2xl font-semibold mb-8">{{ moneyFormat(calculateDiscount(product)) }}</div>
-              <div class="flex items-center mb-8">
+              <div v-if="product.stock > 0" class="flex items-center mb-8">
                 <span>Quantity</span>
-                <input v-model="quantity" type="number" class="ml-2 border rounded-2xl py-1 px-3" />
+                <input v-model="quantity" :max="product.stock" @input="checkStock" type="number"
+                  class="ml-2 border rounded-2xl py-1 px-3" />
               </div>
               <div class="mb-4 pb-4 border-b border-gray-line">
                 <p v-if="product.discount != null || product.discount > 0" class="mb-2">Discount: <strong> {{
                   product.discount }}%</strong></p>
               </div>
-              <button @click.prevent="handleAddToCart(product.id, quantity)"
+              <button v-if="product.stock > 0" @click.prevent="handleAddToCart(product.id, quantity)"
                 class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full">Add
                 to Cart</button>
+              <button v-else disabled
+                class="border border-primary bg-transparent text-primary font-semibold py-2 px-4 rounded-full">Out
+                of Stock</button>
             </div>
             <!-- Social sharing -->
             <div class="flex space-x-4 my-6">
