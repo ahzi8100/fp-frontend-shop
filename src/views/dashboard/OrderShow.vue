@@ -13,7 +13,6 @@ onMounted(async () => {
   const snap_token = route.params.snap_token;
   detailOrder.value = await getDetailOrder(snap_token);
 })
-
 </script>
 
 <template>
@@ -111,7 +110,8 @@ onMounted(async () => {
             <hr class="my-4 border-gray-200">
             <table class="w-full">
               <tbody>
-                <tr v-for="product in detailOrder.orders" :key="product.id" class="bg-gray-100 border-b border-gray-200">
+                <tr v-for="product in detailOrder.orders" :key="product.id"
+                  class="bg-gray-100 border-b border-gray-200">
                   <td class="p-4" width="25%">
                     <div class="w-24 h-24">
                       <img :src="product.image" class="w-full h-full object-cover rounded-lg">
