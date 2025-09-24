@@ -14,6 +14,25 @@ onMounted(async () => {
   const snap_token = route.params.snap_token;
   detailOrder.value = await getDetailOrder(snap_token);
 })
+
+const router = useRoute();
+
+const payment = (snapToken) => {
+  window.snap.pay(snapToken, {
+    onSuccess: function (result) {
+      console.log("Success: ", result);
+      router.push({ name: 'detail_order', params: { snap_token: snapToken } })
+    },
+    onPending: function (result) {
+      console.log("Pending: ", result);
+      router.push({ name: 'detail_order', params: { snap_token: snapToken } })
+    },
+    onError: function (result) {
+      console.log("Error: ", result);
+      router.push({ name: 'detail_order', params: { snap_token: snapToken } })
+    }
+  })
+}
 </script>
 
 <template>
@@ -89,16 +108,16 @@ onMounted(async () => {
                   </td>
                   <td class="w-1 py-2">:</td>
                   <td class="py-2">
-                    <button v-if="detailOrder.status == 'Pending'"
+                    <button v-if="detailOrder.status = 'Pending'" @click.prevent="payment(detailOrder.snap_token)"
                       class="bg-gray-500 hover:bg-gray-600 font-semibold py-2 px-4 rounded-full">BAYAR
                       SEKARANG</button>
-                    <button v-else-if="detailOrder.status == 'Success'"
+                    <button v-else-if="detailOrder.status = 'Success'"
                       class="bg-green-500 hover:bg-green-600 text-gray-400 font-semibold py-2 px-4 rounded-full">
                       {{ detailOrder.status }}</button>
-                    <button v-else-if="detailOrder.status == 'Expired'"
+                    <button v-else-if="detailOrder.status = 'Expired'"
                       class="bg-yellow-500 hover:bg-yellow-600 text-gray-400 font-semibold py-2 px-4 rounded-full">
                       {{ detailOrder.status }}</button>
-                    <button v-else-if="detailOrder.status == 'Failed'"
+                    <button v-else-if="detailOrder.status = 'Failed'"
                       class="bg-red-500 hover:bg-red-600 text-gray-400 font-semibold py-2 px-4 rounded-full">
                       {{ detailOrder.status }}</button>
                   </td>
