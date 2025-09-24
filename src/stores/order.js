@@ -13,13 +13,13 @@ export const useOrderStore = defineStore('orderStore', {
       const data = res.data;
 
       return data.data;
+    },
+
+    async getDetailOrder(snap_token) {
+      const res = await Api.get(`/order/${snap_token}`);
+      const data = res.data;
+
+      return data.data;
     }
-  },
-
-  async getDetailOrder(snap_token) {
-    const res = await Api.get(`/order/${snap_token}`);
-    const data = res.data;
-
-    return data.data;
   }
 })

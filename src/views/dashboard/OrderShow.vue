@@ -1,5 +1,6 @@
 <script setup>
 import CustomerMenu from '@/components/CustomerMenu.vue';
+import { moneyFormat } from '@/helper/useFormatter';
 import { useOrderStore } from '@/stores/order';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -61,7 +62,7 @@ onMounted(async () => {
                   </td>
                   <td class="w-1 py-2">:</td>
                   <td class="py-2">
-                    {{ detailOrder.courier }} / {{ detailOrder.service }} / {{ detailOrder.cost_courier }}
+                    {{ detailOrder.courier }} / {{ detailOrder.service }} / {{ moneyFormat(detailOrder.cost_courier) }}
                   </td>
                 </tr>
                 <tr>
@@ -79,7 +80,7 @@ onMounted(async () => {
                   </td>
                   <td class="w-1 py-2">:</td>
                   <td class="py-2">
-                    {{ detailOrder.grand_total }}
+                    {{ moneyFormat(detailOrder.grand_total) }}
                   </td>
                 </tr>
                 <tr>
@@ -88,14 +89,17 @@ onMounted(async () => {
                   </td>
                   <td class="w-1 py-2">:</td>
                   <td class="py-2">
-                    <button class="bg-gray-500 hover:bg-gray-600 font-semibold py-2 px-4 rounded-full">BAYAR
+                    <button v-if="detailOrder.status == 'Pending'"
+                      class="bg-gray-500 hover:bg-gray-600 font-semibold py-2 px-4 rounded-full">BAYAR
                       SEKARANG</button>
-                    <button class="bg-green-500 hover:bg-green-600 text-gray-400 font-semibold py-2 px-4 rounded-full">
+                    <button v-else-if="detailOrder.status == 'Success'"
+                      class="bg-green-500 hover:bg-green-600 text-gray-400 font-semibold py-2 px-4 rounded-full">
                       {{ detailOrder.status }}</button>
-                    <button
+                    <button v-else-if="detailOrder.status == 'Expired'"
                       class="bg-yellow-500 hover:bg-yellow-600 text-gray-400 font-semibold py-2 px-4 rounded-full">
                       {{ detailOrder.status }}</button>
-                    <button class="bg-red-500 hover:bg-red-600 text-gray-400 font-semibold py-2 px-4 rounded-full">
+                    <button v-else-if="detailOrder.status == 'Failed'"
+                      class="bg-red-500 hover:bg-red-600 text-gray-400 font-semibold py-2 px-4 rounded-full">
                       {{ detailOrder.status }}</button>
                   </td>
                 </tr>
@@ -130,7 +134,7 @@ onMounted(async () => {
                     </table>
                   </td>
                   <td class="p-4 text-right">
-                    <p class="m-0 font-bold">{{ product.price }}</p>
+                    <p class="m-0 font-bold">{{ moneyFormat(product.price) }}</p>
                   </td>
                 </tr>
               </tbody>
